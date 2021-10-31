@@ -12,7 +12,7 @@ Repositório contendo o projeto desenvolvido para a disciplina de TÓPICOS EM SI
 - [Lucas Ferreira](https://github.com/KasFerreira) (Implantação)
 - [Andrei Macedo](https://github.com/asmcdo) (Back-End e Testes)
 - [Breno Barreto de Souza Santos](https://github.com/brenobss) (Front-End)
-- [Emanuel Vieira](https://github.com/emanuelvs) (Design)
+- [Emanuel Vieira](https://github.com/emanuelvs) (Front-End e Design)
 - [Cayo Froes](https://github.com/froescayo) (Back-End e BD)
 - [Arlete Reis](https://github.com/arllette) (Requisitos e Documentação)
 
@@ -20,11 +20,23 @@ Repositório contendo o projeto desenvolvido para a disciplina de TÓPICOS EM SI
 
 O projeto-piloto tem por objetivo desenvolver um sistema de cadastro da progressão e promoção do docente na carreira do Ensino Superior da Universidade Federal da Bahia.
 
+# Demo
+
+https://prog-acad.herokuapp.com/
+
 # Arquitetura do Sistema
+
+Link: https://whimsical.com/arquitetura-da-aplicacao-72ThrruL54ybvGVZX3mMfc
+
 # [Diagramas UML](https://github.com/froescayo/prog-acad-web/tree/master/Diagramas%20UML)
-- Caso de Uso
-- Classes
-- Sequencia
+
+### Caso de Uso
+
+<img src="./Diagramas UML/Diagrama de Caso de Uso.jpeg" width="700">
+
+### Sequencia
+
+<img src="./Diagramas UML/Diagrama de Sequencia.jpeg" width="700">
 
 # Regras de Negócio
 
@@ -54,34 +66,87 @@ O projeto-piloto tem por objetivo desenvolver um sistema de cadastro da progress
   - RNF03: O sistema deve permitir o acesso de diferentes usuários simultâneamente, mantento o tempo de resposta específico
 - Usabilidade:
   -  RNF04: O sistema deve permitir facilidade de uso.
-  -  RNF04: O sistema deve permitir navegabilidade fácil, contendo poucas páginas
+  -  RNF05: O sistema deve permitir navegabilidade fácil, contendo poucas páginas
 - Segurança
-  - RNF05: O sistema disponibiliza o acesso as ações das telas a partir da verificação do perfil do usuário 
-  - RNF06: O sistema registra o log das operações, inclusão e edição realizadas pelos usuários. A tabela armazena a data/hora,usuário 
+  - RNF06: O sistema disponibiliza o acesso as ações das telas a partir da verificação do perfil do usuário 
+  - RNF07: O sistema registra o log das operações, inclusão e edição realizadas pelos usuários. A tabela armazena a data/hora,usuário 
 # Tecnologias Utilizadas
 ## [Front-End](https://github.com/froescayo/prog-acad-web)
 - HTML5
 - CSS3
 - JS
+- [FIGMA](https://www.figma.com/file/USqRlD1bGXuE3YP17iC3ea/PROCAD?node-id=0%3A1)
 - ReactJS
 ## [Back-End](https://github.com/froescayo/prog-acad-api)
-- Docker
-- TypeScript
+
+- NodeJs (Runtime Javascript em Back-End)
+- Typescript (Linguagem de Programação )
+- Postgres (Banco de Dados)
+- Knex (Query Builder)
+- Docker (Infraestrutura)
 # Deploy
 - ## Como Rodar o front-end
+
 - Dependências
   - nodejs
   - npm
   - yarn
 
-- Digite o comando no terminal > git clone https://github.com/froescayo/prog-acad-web.git
+  1) Digite o comando no terminal > git clone https://github.com/froescayo/prog-acad-web.git
 
-- Após isso entre na pasta do projeto ainda no terminal com > cd prog-acad-web
+  2) Após isso entre na pasta do projeto ainda no terminal com > cd prog-acad-web
 
-- Em seguida digite > npm install
+  3) Em seguida digite > npm install
 
-- Por fim > npm start
+  4) Por fim > npm start
+
 - ## Como Rodar o back-end
-# Projeto de Implantação
-- Em construção
+  - Acessar [How To](https://github.com/froescayo/prog-acad-api)
+# Documento de Implantação
+- Sistema Operacional: 
+  - O sistema é independente de SO, pois está sendo implatado sob a virtualização oferecida pelos containers do docker. Deste modo, no que se refere a sistema operacional, é exigido que host onde o sistema será instalado, possua ambiente docker instalado.
+- Requisitos mínimos de memória e processamento:
+  - Nosso sistema está rodando no ambiente grátis da heroku, de acordo com as especificações do site, o heroku usa uma unidade máquina virtual chamada Dyno, com  _1 VCPU de 4 cores_ e até  _512MB de RAM_ sem swap file e sem suporte a _persistência de arquivos_ 
+- Softwares e versões das tecnologias macro
+  - Front-End:
+    - ReactJS (Versão 17.0.2)
+    - HTMLS 5
+    - CSS 3
+    - Docker (Engine 20)
+  - Back-End:
+    - NodeJS (Versão 14.17.6)
+    - Typescript (Versão 4.4)
+    - Knex (0.95.11)
+    - Docker (Engine 20)
+- Versão do Banco de Dados
+  - PostgreSQL (Versão estável 13.4)
+  - Docker (Engine 20)
+- Cloud a ser utilizado
+  - Heroku (https://www.heroku.com/)
+- Descrição de importação ou inicialização de dados, se aplicável
+  - O processo de importação ou inicialização de dados será facilitado pela estratégia _Infrastructure as code_. Um arquivo docker-compose será criado, descrevendo toda infraesturura necessária para ser instalada e inicializada de forma automática pelo docker.
+- Endereço de Acesso (URL e Porta)
+  - url: https://prog-acad.herokuapp.com/
+  - porta: 80 ou 443 
+  - O sistema está hospedado no ambiente grátis da heroku, e segue as
+  - configurações defaul deste ambiente para hospedagem grátis
+- Políticas de permissões:
+  - O sistema possuirá basicamente dois atores, o professor requerente, e professor avaliador. 
+    - Professor requerente, será permitido:
+      - Adicionar, editar, visualizar e excluir itens do seu processo de progressão
+    - Professor avaliador, será permitido:
+      - Visualizar e avaliar o processo de progressão
+# Proposta de Testes
+
+- Como testar o seu portal web ?
+  - No próprio portal
+- Utilização alguma ferramenta ?
+  - No proprio portal
+  - Requisições por meio do Insominia
+- Serão realizados testes unitários ?
+  - Não
+- Quem irá testar o sistema ? 
+  - Será a equipe
+[Documento de Caso de Teste](https://docs.google.com/document/d/18urdVJDw2veKayaqE6ScBmAvY70f-yxZVegUkVgeGYw/edit)
+
   
