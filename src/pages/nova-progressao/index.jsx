@@ -74,7 +74,8 @@ const NovaProgressao = () => {
 
 	const handleStartDateChange = (event) => {
 		let x = moment(event.target.value, "yyyy-MM-DD");
-		x.add(2, "y");
+		// x.add(2, "y");
+		x.subtract(2, "y");
 		if(x.isValid()){
 			setEndDate(x.format("yyyy-MM-DD"))
 		}
@@ -217,9 +218,10 @@ const NovaProgressao = () => {
 										label="Início"
 										size="small"
 										variant="outlined"
-										onChange={handleStartDateChange}
+										value={endDate}
 										type="date"
 										name="dataInicio"
+										disabled
 										InputLabelProps={{
 											shrink: true,
 										}}
@@ -230,9 +232,9 @@ const NovaProgressao = () => {
 										label="Fim"
 										name="dataFim"
 										size="small"
-										value={endDate}
+										
 										variant="outlined"
-										disabled
+										onChange={handleStartDateChange}
 										type="date"
 										InputLabelProps={{
 											shrink: true,

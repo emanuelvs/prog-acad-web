@@ -45,8 +45,21 @@ export default function UserForm({ handleSubmit }) {
 	const [lastName, setLastName] = useState('');
 	const [naturalidade, setNaturalidade] = useState('');
 	const [password, setPassword] = useState('');
+	const [rpassword, setRPassword] = useState('');
 	const [siape, setSiape] = useState('');
 	const [workload, setWorkload] = useState('');
+	const [passwordError, setPasswordError] = useState(null);
+
+	const validPassword = () => {
+		if(password && rpassword === password) {
+			if(passwordError) { setPasswordError(null); }
+			return true;
+		}
+
+		setPasswordError("Credenciais inválidas!")
+
+		return false;
+	}
 
 	const onSubmit = (event) => {
 		event.preventDefault();
@@ -68,7 +81,10 @@ export default function UserForm({ handleSubmit }) {
 			workload, // carga horaria de trabalho
 		}
 
-		handleSubmit(dto)
+		if(validPassword()){
+			handleSubmit(dto)
+		}
+
 	}
 
 	return (
@@ -85,6 +101,7 @@ export default function UserForm({ handleSubmit }) {
 						<Grid container spacing={2}>
 							<Grid item xs={12} md={4} sm={6} lg={3}>
 								<TextField
+									required
 									labelId="firstname-input-label"
 									id="firstname-input"
 									value={firstName}
@@ -115,6 +132,7 @@ export default function UserForm({ handleSubmit }) {
 								<FormControl variant="outlined" fullWidth size="small" style={{ marginBottom: '8px' }}>
 								<InputLabel id="formacao-input-label">Formação</InputLabel>
 								<Select
+									required
 									labelId="formacao-input-label"
 									id="formacao-input"
 									value={academicDegreeId}
@@ -134,6 +152,7 @@ export default function UserForm({ handleSubmit }) {
 								<FormControl variant="outlined" fullWidth size="small" style={{ marginBottom: '8px' }}>
 								<InputLabel id="carreira-input-label">Carreira</InputLabel>
 								<Select
+									required
 									labelId="carreira-input-label"
 									id="carreira-input"
 									value={careerId}
@@ -179,6 +198,7 @@ export default function UserForm({ handleSubmit }) {
 								<FormControl variant="outlined" fullWidth size="small" style={{ marginBottom: '8px' }}>
 								<InputLabel id="nivel-input-label">Nível</InputLabel>
 								<Select
+									required
 									labelId="nivel-input-label"
 									id="nivel-input"
 									value={levelId}
@@ -198,6 +218,7 @@ export default function UserForm({ handleSubmit }) {
 								<FormControl variant="outlined" fullWidth size="small" style={{ marginBottom: '8px' }}>
 								<InputLabel id="nacionalidade-input-label">Nacionalidade</InputLabel>
 								<Select
+									required
 									labelId="nacionalidade-input-label"
 									id="nacionalidade-input"
 									value={nationalityId}
@@ -217,6 +238,7 @@ export default function UserForm({ handleSubmit }) {
 								<FormControl variant="outlined" fullWidth size="small" style={{ marginBottom: '8px' }}>
 								<InputLabel id="perfil-input-label">Perfil</InputLabel>
 								<Select
+									required
 									labelId="perfil-input-label"
 									id="perfil-input"
 									value={roleId}
@@ -267,7 +289,7 @@ export default function UserForm({ handleSubmit }) {
 									required
 									id="siape-input"
 									fullWidth
-									label="siape"
+									label="Siape"
 									size="small"
 									name="siape"
 									variant="outlined"
@@ -292,16 +314,38 @@ export default function UserForm({ handleSubmit }) {
 							</Grid>
 							<Grid item xs={12} md={4} sm={6} lg={3}>
 								<TextField
+									required
 									id="password-input"
 									fullWidth
 									size="small"
-									label="Password"
+									label="Senha"
 									type="password"
 									name="password"
 									autoComplete="current-password"
 									variant="outlined"
 									value={password}
+									error={passwordError}
+									helperText={passwordError}
 									onChange={(event) => setPassword(event.target.value)}
+									style={{ marginBottom: '24px' }}
+								/>
+							</Grid>
+
+							<Grid item xs={12} md={4} sm={6} lg={3}>
+								<TextField
+									required
+									id="rpassword-input"
+									fullWidth
+									size="small"
+									label="Repetir Senha"
+									type="password"
+									name="password"
+									autoComplete="current-password"
+									variant="outlined"
+									value={rpassword}
+									error={passwordError}
+									helperText={passwordError}
+									onChange={(event) => setRPassword(event.target.value)}
 									style={{ marginBottom: '24px' }}
 								/>
 							</Grid>
@@ -311,7 +355,7 @@ export default function UserForm({ handleSubmit }) {
 									id="workload-input"
 									fullWidth
 									size="small"
-									label="Workload"
+									label="Carga Horária"
 									name="workload"
 									variant="outlined"
 									value={workload}

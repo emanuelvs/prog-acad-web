@@ -31,7 +31,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function FieldsTable({list}) {
+export default function FieldsTable({list, performedNumber}) {
 
   const history = useHistory();
   const match = useRouteMatch();
@@ -47,6 +47,7 @@ export default function FieldsTable({list}) {
           <TableRow>
             <StyledTableCell align="left" >CAMPO</StyledTableCell>
             {/* <StyledTableCell align="left" >REALIZADAS</StyledTableCell> */}
+            <StyledTableCell align="center" >REALIZADAS</StyledTableCell>
             <StyledTableCell align="left" >&nbsp;</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -58,6 +59,7 @@ export default function FieldsTable({list}) {
               <StyledTableRow key={row.id} onClick={() => handleClick(row.id)} style={{flex: 1, width: '100%'}}>
                 <StyledTableCell align="left">{row.campo}</StyledTableCell>
                 {/* <StyledTableCell align="center">{0}</StyledTableCell> */}
+                <StyledTableCell align="center">{performedNumber(row.id)}</StyledTableCell>
                 <StyledTableCell align="center"><ArrowForward/></StyledTableCell>
 
                 {/* <StyledTableCell align="left">{new Date(row.createdAt).toLocaleDateString()}</StyledTableCell>

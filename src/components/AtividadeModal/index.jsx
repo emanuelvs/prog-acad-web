@@ -11,7 +11,7 @@ import {
 import PaperContainer from '../PaperContainer';
 import { HighlightOff, CloudUpload } from "@material-ui/icons"
 import { GlobalStateContext } from '../../store';
-
+import moment from 'moment';
 
 const headerContainer = {
     display: 'flex',
@@ -19,7 +19,7 @@ const headerContainer = {
 
 const AtividadeModal = ({open, handleClose, atividade, onSubmit}) => {
 
-    const [state, dispatch] = useContext(GlobalStateContext);
+    const [state, ] = useContext(GlobalStateContext);
 
     const [semestre1, setSemestre1] = useState(0);
     const [semestre2, setSemestre2] = useState(0);
@@ -27,15 +27,22 @@ const AtividadeModal = ({open, handleClose, atividade, onSubmit}) => {
     const [semestre4, setSemestre4] = useState(0);
     const [arquivoPDF, setArquivoPDF] = useState({});
 
-    let { from = '2021-10-4', to = '2022-10-4' } = (state.formulary.data || {}).dbFormulary || {};
+    let { from = '2021-10-4' } = (state.formulary.data || {}).dbFormulary || {};
 
-    const intersticio = {
 
-        period1: `${(new Date(from)).getFullYear()}.1`,
-        period2: `${(new Date(from)).getFullYear()}.2`,
-        period3: `${(new Date(to)).getFullYear()}.1`,
-        period4: `${(new Date(to)).getFullYear()}.2`,
+    let dates = {
+        p1: moment(from),
+        p2: moment(from).add(6, "months"),
+        p3: moment(from).add(12, "months"),
+        p4: moment(from).add(18, "months"),
     }
+    const intersticio = {
+        period1: `${dates.p1.year()}.${dates.p1.month() < 7 ? 1 : 2}`,
+        period2: `${dates.p2.year()}.${dates.p2.month() < 7 ? 1 : 2}`,
+        period3: `${dates.p3.year()}.${dates.p3.month() < 7 ? 1 : 2}`,
+        period4: `${dates.p4.year()}.${dates.p4.month() < 7 ? 1 : 2}`,
+    }
+
 
     useEffect(() => {
         let { from = '2021-10-4', to = '2022-10-4' } = (state.formulary.data || {}).dbFormulary || {};
@@ -47,11 +54,18 @@ const AtividadeModal = ({open, handleClose, atividade, onSubmit}) => {
         
         let answer = (dto || {}).answer || [];
 
+        const inter = {
+            period1: `${dates.p1.year()}.${dates.p1.month() < 7 ? 1 : 2}`,
+            period2: `${dates.p2.year()}.${dates.p2.month() < 7 ? 1 : 2}`,
+            period3: `${dates.p3.year()}.${dates.p3.month() < 7 ? 1 : 2}`,
+            period4: `${dates.p4.year()}.${dates.p4.month() < 7 ? 1 : 2}`,
+        }
+
         let models = [
-            {period: `${(new Date(from)).getFullYear()}.1`, cb: setSemestre1},
-            {period: `${(new Date(from)).getFullYear()}.2`, cb: setSemestre2},
-            {period: `${(new Date(to)).getFullYear()}.1`, cb: setSemestre3},
-            {period: `${(new Date(to)).getFullYear()}.2`, cb: setSemestre4},
+            {period: inter.period1, cb: setSemestre1},
+            {period: inter.period2, cb: setSemestre2},
+            {period: inter.period3, cb: setSemestre3},
+            {period: inter.period4, cb: setSemestre4},
         ]
 
         models.forEach(m => {
@@ -83,6 +97,7 @@ const AtividadeModal = ({open, handleClose, atividade, onSubmit}) => {
         setSemestre3(0);
         setSemestre4(0);
         setArquivoPDF({})
+
         handleClose()
     }
 
@@ -155,7 +170,7 @@ const AtividadeModal = ({open, handleClose, atividade, onSubmit}) => {
                         
                         <div style={{width: 'maxContent', marginLeft: 8}}>
                             <IconButton 
-                                onClick={handleClose}
+                                onClick={onClose}
                                 aria-label="close" 
                                 style={{padding: 6}} 
                                 color="secondary"

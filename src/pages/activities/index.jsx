@@ -6,13 +6,13 @@ import {
     Typography
 } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
-import { Link, useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import PaperContainer from '../../components/PaperContainer';
 import AtividadeItem from '../../components/AtividadeItem';
 import AtividadeModal from '../../components/AtividadeModal';
 import { getActivities } from '../../store/reducers/report';
 import { GlobalStateContext } from '../../store';
-import { setActivity, updateFormAnswer, getFormulary } from '../../store/reducers/formulary';
+import { updateFormAnswer, getFormulary } from '../../store/reducers/formulary';
 import { Snackbar, CircularProgress } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 
@@ -30,22 +30,21 @@ const Activities = () => {
 
     const [state, dispatch] = useContext(GlobalStateContext);
 
-    const [open, setOpen] = React.useState(false);
-    const [errorMessage, setErrorMessage] = React.useState("");
-    const [success, setSuccess] = React.useState(false)
-
-    
+    const [open, setOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    const [success, setSuccess] = useState(false)
 
     const campo = (state.report.fields || []).find(el => el.id === params.campoId) || {}
 
     useEffect(() => {
-
+        
         getActivities(params.campoId, dispatch).catch(console.log);
     }, [dispatch]);
 
     
 
-    let fieldAnswers = (state.formulary.data || {}).dbFormularyAnswers || [].filter(ans => ans.fieldId === params.campoId)
+    let { dbFormularyAnswers = [] } = state.formulary.data || {};
+        let fieldAnswers =  dbFormularyAnswers.filter(ans => ans.fieldId === params.campoId);
 
     const handleAtividadesRealizadas = async (atividade) => {
         
@@ -92,9 +91,9 @@ const Activities = () => {
     const handleClose = async () => {
         
         
-        setOpenModal(false);
         setAtividadeSelected({});
-        getFormulary(params.formularyId, dispatch).catch(console.log);
+        setOpenModal(false);
+        await getFormulary(params.formularyId, dispatch).catch(console.log);
     };
 
     const handleSelectItem = (atividade) => {
