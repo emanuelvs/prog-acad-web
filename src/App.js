@@ -14,6 +14,8 @@ import Header from './components/Header';
 import RelatorioAtividades from './pages/relatorio-atividades';
 import axios from 'axios';
 import moment from 'moment';
+import GerarRelatorio from "./pages/gerarRelatorio";
+
 
 moment.locale();
 
@@ -54,6 +56,10 @@ function App() {
           <Route path="/login" component={Auth} />
           <Route path="/cadastro" component={Auth} />
 
+          <PrivateRoute path="/relatorio-de-atividades/:formularyId/relatorio">
+                <GerarRelatorio/>
+          </PrivateRoute>
+          
           <div>
             <Header/>
             
@@ -69,6 +75,8 @@ function App() {
               <RelatorioAtividades/>
             </PrivateRoute>
           </div>
+
+          
 
           {/* <Route path="/" component={Dashboard} /> */}
         </Switch>

@@ -42,9 +42,9 @@ export default function ProgressTable({list}) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {list.map((row) => (
+          {list.map((row, idx) => (
             
-              <StyledTableRow key={row.id} >
+              <StyledTableRow key={idx} >
                 <StyledTableCell align="left">{row.atividade}</StyledTableCell>
                 <StyledTableCell align="center">{row.points}</StyledTableCell>
               </StyledTableRow>

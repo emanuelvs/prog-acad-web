@@ -8,35 +8,18 @@ import {
 import { ArrowBack } from "@material-ui/icons";
 import { Link, Switch, Route, useRouteMatch, useParams } from 'react-router-dom';
 import Activities from '../activities';
-import { getFields } from '../../store/reducers/report';
+import { getFields, getActivitiesCompleted } from '../../store/reducers/report';
 import { GlobalStateContext } from '../../store';
 import { getFormulary } from '../../store/reducers/formulary';
 import { Snackbar } from '@mui/material';
 import VisualizarProgresso from '../visualizarProgresso';
 import FieldsTable from '../../components/FieldsTable';
-
+import GerarRelatorio from '../gerarRelatorio';
+import ReportHeader from '../../components/ReportHeader';
 
 const MuiAlert = React.forwardRef(function Alert(props, ref) {
     return <Alert elevation={6} ref={ref} variant="filled" {...props} />;
 });
-
-const Comission = ({list}) => {
-    return (
-        <>
-        {
-            list.map((comis, idx) => 
-                <Typography 
-                    variant="body2" 
-                    color="textPrimary" 
-                    key={idx}
-                    style={{fontSize: 12, border: '1px solid #ebebeb', padding: '2px 4px', marginBottom: '6px'}}>
-
-                    {`${comis.professorName}, ${comis.institute}, ${comis.department}`}
-                </Typography>)
-        }
-        </>
-    )
-}
 
 
 const RelatorioAtividades = () => {
@@ -46,11 +29,16 @@ const RelatorioAtividades = () => {
     const params = useParams();
 
     useEffect(() => {
+        async function fetchData() {
+            let formulary = await getFormulary(params.formularyId, dispatch).catch(console.log);
+            await getFields(dispatch);
 
-        //Chama os campos
-        getFormulary(params.formularyId, dispatch).catch(console.log);
-        getFields(dispatch).catch(console.log);
-    }, [dispatch])
+            let answers = (formulary || {}).dbFormularyAnswers || [];
+            await getActivitiesCompleted(answers, dispatch)
+        }
+
+        fetchData();
+    }, [])
 
     const [open, setOpen] = React.useState(false);
 
@@ -73,14 +61,6 @@ const RelatorioAtividades = () => {
         }, 0)
     }
 
-
-    let comissao = ((state.formulary.data || {}).dbFormulary || {}).comission || []
-
-    let solicitacaoLabel = {
-        'Progressao': "Progressão",
-        'Promocao': "Promoção"
-    }
-
     return (
         <Switch>
             <Route path={`${match.path}/campo/:campoId`}>
@@ -89,7 +69,7 @@ const RelatorioAtividades = () => {
             <Route exact path={match.path}>
                 <Container>
                     
-                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px'}}>
                         <div>
                             <Link to="/">
                                 <IconButton edge="start" aria-label="voltar">
@@ -107,30 +87,15 @@ const RelatorioAtividades = () => {
                             </Typography>
 
                         </div>
+                        <div>
+                            <Link to={`${match.url}/progresso`}>
+                                <Button variant="contained" color="primary" >Visualizar Progresso</Button>
+                            </Link>
+                        </div>
                     </div>
 
                     <div>
-                        <div style={{display:'flex', justifyContent: 'space-between', marginBottom: '20px'}}>
-                            <div style={{marginRight: "12px"}}>
-                                <Typography variant="body1" color="textSecondary" style={{fontSize: 12}}>
-                                    Tipo de Solicitação: <span className="fnt-color-black">{solicitacaoLabel[((state.formulary.data || {}).dbFormulary || {}).type] || "N/A"}</span>
-                                </Typography>
-                                <Typography variant="body1" color="textSecondary" className="fnt-normal">
-                                    Interstício: <span className="fnt-color-black fnt-normal">{`${new Date(((state.formulary.data || {}).dbFormulary || {}).from).toLocaleDateString()} a ${new Date(((state.formulary.data || {}).dbFormulary || {}).to).toLocaleDateString()}`}</span>
-                                </Typography>
-                                
-                            </div>
-
-                            <div style={{display:'flex'}}>
-                                <Typography variant="body1" color="textSecondary" className="fnt-normal">
-                                    Comissão:
-                                </Typography>
-                                <div style={{marginLeft: '8px'}}>
-                                {comissao.length ? <Comission list={comissao} /> : <Typography variant="body1" color="textSecondary">&nbsp;N/A</Typography>}
-                                </div>
-                            </div>
-                        </div>
-
+                        <ReportHeader/>
                         <FieldsTable list={(state.report.fields || [])} performedNumber={performedNumber}/>
                         
                     </div>
@@ -148,9 +113,10 @@ const RelatorioAtividades = () => {
                 </Container>
             </Route>
 
-            <Route path={`${match.path}/progresso`}>
+            <Route exact path={`${match.path}/progresso`}>
                 <VisualizarProgresso/>
             </Route>
+            
         </Switch>
     );
 }

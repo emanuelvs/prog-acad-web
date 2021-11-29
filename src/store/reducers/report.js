@@ -60,6 +60,7 @@ export function getFields(dispatch) {
 	return axios.get('/fields')
 		.then(({data}) => {
 			setFields(data, dispatch)
+			return data;
 		})
 		.catch(err => {
 			console.log(err);
@@ -83,11 +84,10 @@ export function getActivities(fieldId, dispatch) {
 		})
 }
 
-export async function getActivitiesCompleted(list, fields, dispatch){
+export async function getActivitiesCompleted(list, dispatch){
 	setLoading(true, dispatch);
 	
-	
-	await axios.all(fields.map(field => axios.get(`/field/${field.id}/activities`)))
+	await axios.all(list.map(field => axios.get(`/field/${field.fieldId}/activities`)))
 		.then(results => {
 			let dto = [];
 			let completed = [];
@@ -103,8 +103,8 @@ export async function getActivitiesCompleted(list, fields, dispatch){
 					let soma = Number((dto * activity.pontos).toFixed(2));
 					
 					completed.push({
-						atividade: activity.atividade,
-						points: soma
+						points: soma,
+						...activity
 					})
 				}
 			})

@@ -15,17 +15,7 @@ import { GlobalStateContext } from '../../store';
 import { createFormulary, getFormulary } from '../../store/reducers/formulary';
 import { Snackbar, Alert, CircularProgress } from '@mui/material';
 import ProgressTable from '../../components/ProgressTable';
-
-const Comission = ({list}) => {
-	return (
-			<>
-			{list.map((comis, idx) => <Typography variant="body1" color="textSecondary" key={idx}>
-					{`${comis.professorName}, ${comis.institute}, ${comis.department}`}
-			</Typography>)}
-			
-			</>
-	)
-}
+import ReportHeader from '../../components/ReportHeader';
 
 
 const VisualizarProgresso = () => {
@@ -34,24 +24,20 @@ const VisualizarProgresso = () => {
 	const match = useRouteMatch();
 	const params = useParams();
 	const history = useHistory();
-
 	useEffect(() => {
 		let answers = (state.formulary.data || {}).dbFormularyAnswers || [];
-		getActivitiesCompleted(answers, state.report.fields, dispatch);
+		getActivitiesCompleted(answers, dispatch);
+
 	}, [])
 
-	const getTotal = () => {
-		return state.report.allActivities.reduce((soma, next) => {
-			soma += Number(next.points);
-			return soma;
-		}, 0)
-	}
 
 	const goBack = () => {
 		history.goBack()
 	}
 
-	let comissao = ((state.formulary.data || {}).dbFormulary || {}).comission || []
+	const goToGerarRelatorio = () => {
+		history.push("relatorio")
+	}
 
 	return (
 		<Container>
@@ -77,35 +63,7 @@ const VisualizarProgresso = () => {
 			</div>
 
 			<div>
-				<div style={{display: 'flex', alignItems: 'center', padding: '10px 0 8px 0'}}>
-					<div style={{display: 'flex'}}>
-							<div>
-								<Typography variant="body1" color="textSecondary">
-										Tipo de Solicitação: {((state.formulary.data || {}).dbFormulary || {}).type}
-								</Typography>
-								<Typography variant="body1" color="textSecondary">
-										Interstício: {`${new Date(((state.formulary.data || {}).dbFormulary || {}).from).toLocaleDateString()} a ${new Date(((state.formulary.data || {}).dbFormulary || {}).to).toLocaleDateString()}`}
-								</Typography>	
-							</div>				
-							<div style={{marginLeft: '20px'}}>
-								<div style={{display:'flex'}}>
-									<Typography variant="body1" color="textSecondary">
-										Comissão:
-									</Typography>
-									<div style={{marginLeft: '8px'}}>
-									{comissao.length ? <Comission list={comissao} /> : <Typography variant="body1" color="textSecondary">&nbsp;N/A</Typography>}
-									</div>
-								</div>
-							</div>				
-							
-							
-
-					</div>
-
-					<div style={{marginTop: '0px', marginLeft: 'auto'}}>
-							<Typography color="textSecondary">Pontuação Total <Typography variant="h3" color="primary" style={{textAlign: 'right'}}>{getTotal()}</Typography></Typography>
-					</div>
-				</div>
+				<ReportHeader/>
 				<div style={{maxHeight: 450}}>
 					<ProgressTable list={state.report.allActivities}/>
 
@@ -113,7 +71,7 @@ const VisualizarProgresso = () => {
 				
 			</div>
 			<div style={{ display: 'flex', justifyContent: 'center', marginTop: '24px' }}>
-				<Button variant="contained" color="primary" disabled>Gerar Relatório</Button>
+				<Button variant="contained" color="primary" onClick={goToGerarRelatorio}>Gerar Relatório</Button>
 			</div>
 		</Container>
 	);
